@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
-import { Trophy, Users, Target, Award } from "lucide-react";
+import { Trophy, Users, Target, Award, Instagram } from "lucide-react";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { supabase } from "@/lib/supabase";
 import { useLanguage } from "@/hooks/useLanguage";
@@ -119,6 +119,22 @@ const Club = () => {
             </div>
 
             <p className="text-muted-foreground mb-8">{t.club.historyText}</p>
+
+            {/* Social Media */}
+            <div className="bg-card-gradient rounded-lg p-6 border border-border">
+              <h3 className="font-display text-xl mb-4">Social Media</h3>
+              <a 
+                href="https://www.instagram.com/renegades_nuernberg/" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-3 text-muted-foreground hover:text-primary transition-colors group"
+              >
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400 flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <Instagram className="w-5 h-5 text-white" />
+                </div>
+                <span className="font-medium">@renegades_nuernberg</span>
+              </a>
+            </div>
           </div>
         </div>
       </section>
