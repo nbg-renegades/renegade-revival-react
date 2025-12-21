@@ -2,20 +2,24 @@ import { Link, useLocation } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-
-const navLinks = [
-  { name: "Home", path: "/" },
-  { name: "Team", path: "/team" },
-  { name: "Club", path: "/club" },
-  { name: "Training", path: "/training" },
-  { name: "Sponsoring", path: "/sponsoring" },
-  { name: "Contact", path: "/contact" },
-];
+import { ThemeToggle } from "@/components/ThemeToggle";
+import { LanguageToggle } from "@/components/LanguageToggle";
+import { useLanguage } from "@/hooks/useLanguage";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [logoError, setLogoError] = useState(false);
   const location = useLocation();
+  const { t } = useLanguage();
+
+  const navLinks = [
+    { name: t.nav.home, path: "/" },
+    { name: t.nav.team, path: "/team" },
+    { name: t.nav.club, path: "/club" },
+    { name: t.nav.training, path: "/training" },
+    { name: t.nav.sponsoring, path: "/sponsoring" },
+    { name: t.nav.contact, path: "/contact" },
+  ];
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
@@ -50,18 +54,25 @@ const Navbar = () => {
               </Button>
             </Link>
           ))}
+          <div className="flex items-center gap-1 ml-2 border-l border-border pl-2">
+            <LanguageToggle />
+            <ThemeToggle />
+          </div>
         </div>
 
-        {/* Mobile Menu Button */}
-        <Button
-          variant="ghost"
-          size="icon"
-          className="md:hidden"
-          onClick={() => setIsOpen(!isOpen)}
-          aria-label="Toggle menu"
-        >
-          {isOpen ? <X size={24} /> : <Menu size={24} />}
-        </Button>
+        {/* Mobile Controls */}
+        <div className="flex items-center gap-1 md:hidden">
+          <LanguageToggle />
+          <ThemeToggle />
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setIsOpen(!isOpen)}
+            aria-label="Toggle menu"
+          >
+            {isOpen ? <X size={24} /> : <Menu size={24} />}
+          </Button>
+        </div>
 
         {/* Mobile Navigation */}
         {isOpen && (

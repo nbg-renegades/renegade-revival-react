@@ -5,10 +5,12 @@ import { useToast } from "@/hooks/use-toast";
 import { Trophy, Users, Target, Award } from "lucide-react";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { supabase } from "@/lib/supabase";
+import { useLanguage } from "@/hooks/useLanguage";
 
 const Club = () => {
   const { toast } = useToast();
   const { executeRecaptcha } = useGoogleReCaptcha();
+  const { t } = useLanguage();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [memberType, setMemberType] = useState<"active" | "supporting">("active");
 
@@ -24,7 +26,6 @@ const Club = () => {
       const recaptchaToken = await executeRecaptcha("membership_form");
       const formData = new FormData(e.currentTarget);
 
-      // Get current month and year for join date
       const now = new Date();
       const currentMonth = String(now.getMonth() + 1).padStart(2, "0");
       const currentYear = String(now.getFullYear());
@@ -61,8 +62,8 @@ const Club = () => {
       if (error) throw error;
 
       toast({
-        title: "Antrag gesendet!",
-        description: "Wir melden uns bald mit weiteren Informationen bei dir.",
+        title: t.club.successTitle,
+        description: t.club.successDesc,
       });
 
       (e.target as HTMLFormElement).reset();
@@ -70,8 +71,8 @@ const Club = () => {
     } catch (error) {
       console.error("Error submitting membership form:", error);
       toast({
-        title: "Fehler",
-        description: "Antrag konnte nicht gesendet werden. Bitte versuche es erneut.",
+        title: t.club.errorTitle,
+        description: t.club.errorDesc,
         variant: "destructive",
       });
     } finally {
@@ -84,9 +85,9 @@ const Club = () => {
       {/* Hero */}
       <section className="py-20 bg-card">
         <div className="container mx-auto px-4 text-center">
-          <h1 className="font-display text-5xl md:text-6xl mb-4">Unser Verein</h1>
+          <h1 className="font-display text-5xl md:text-6xl mb-4">{t.club.title}</h1>
           <p className="text-muted-foreground text-lg max-w-xl mx-auto">
-            Erfahre mehr über Nürnberg Renegades e.V.
+            {t.club.subtitle}
           </p>
         </div>
       </section>
@@ -95,37 +96,29 @@ const Club = () => {
       <section className="py-16">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
-            <h2 className="font-display text-3xl mb-8">Über Nürnberg Renegades e.V.</h2>
+            <h2 className="font-display text-3xl mb-8">{t.club.aboutTitle}</h2>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
               <div className="bg-card-gradient rounded-lg p-6 border border-border">
                 <Trophy className="w-8 h-8 text-primary mb-4" />
-                <h3 className="font-display text-xl mb-2">Vereinsgründung</h3>
-                <p className="text-muted-foreground text-sm">
-                  Nürnberg Renegades e.V. wurde 2022 mit dem Ziel gegründet, Flag Football in der Region Nürnberg zu etablieren und zu fördern.
-                </p>
+                <h3 className="font-display text-xl mb-2">{t.club.foundationTitle}</h3>
+                <p className="text-muted-foreground text-sm">{t.club.foundationDesc}</p>
               </div>
               
               <div className="bg-card-gradient rounded-lg p-6 border border-border">
                 <Users className="w-8 h-8 text-primary mb-4" />
-                <h3 className="font-display text-xl mb-2">Vereinsführung</h3>
-                <p className="text-muted-foreground text-sm">
-                  Unser Verein wird von einem engagierten Vorstand geleitet, der aus erfahrenen Spielern und Sportmanagern besteht, die ehrenamtlich arbeiten.
-                </p>
+                <h3 className="font-display text-xl mb-2">{t.club.leadershipTitle}</h3>
+                <p className="text-muted-foreground text-sm">{t.club.leadershipDesc}</p>
               </div>
               
               <div className="bg-card-gradient rounded-lg p-6 border border-border">
                 <Award className="w-8 h-8 text-primary mb-4" />
-                <h3 className="font-display text-xl mb-2">Erfolge</h3>
-                <p className="text-muted-foreground text-sm">
-                  Aufstieg in die 1. DFFL Division, mehrere regionale Turniersiege und die Entwicklung von über 50 aktiven Spielern.
-                </p>
+                <h3 className="font-display text-xl mb-2">{t.club.achievementsTitle}</h3>
+                <p className="text-muted-foreground text-sm">{t.club.achievementsDesc}</p>
               </div>
             </div>
 
-            <p className="text-muted-foreground mb-8">
-              Was als kleine Gruppe von Footballbegeisterten begann, hat sich zu einem der führenden Flag Football Vereine in Bayern entwickelt. Unser Verein ist stolz darauf, sowohl Anfänger als auch erfahrene Spieler auf ihrem sportlichen Weg zu unterstützen.
-            </p>
+            <p className="text-muted-foreground mb-8">{t.club.historyText}</p>
           </div>
         </div>
       </section>
@@ -134,32 +127,30 @@ const Club = () => {
       <section className="py-16 bg-card">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
-            <h2 className="font-display text-3xl mb-4">Mitglied werden</h2>
-            <p className="text-muted-foreground mb-8">
-              Werde Teil unserer Flag Football Familie! Als Vereinsmitglied erhältst du Zugang zu professionellem Training, Turnieren und einer tollen Gemeinschaft von Sportbegeisterten.
-            </p>
+            <h2 className="font-display text-3xl mb-4">{t.club.memberTitle}</h2>
+            <p className="text-muted-foreground mb-8">{t.club.memberDesc}</p>
 
             <div className="flex items-center gap-3 mb-6">
               <Target className="w-5 h-5 text-primary" />
-              <span className="font-semibold">Mitgliedsvorteile</span>
+              <span className="font-semibold">{t.club.benefitsTitle}</span>
             </div>
 
             <ul className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-8">
               <li className="flex items-center gap-2 text-muted-foreground">
                 <div className="w-2 h-2 bg-primary rounded-full" />
-                Professionelles Training mit erfahrenen Trainern
+                {t.club.benefit1}
               </li>
               <li className="flex items-center gap-2 text-muted-foreground">
                 <div className="w-2 h-2 bg-primary rounded-full" />
-                Teilnahme an regionalen und nationalen Turnieren
+                {t.club.benefit2}
               </li>
               <li className="flex items-center gap-2 text-muted-foreground">
                 <div className="w-2 h-2 bg-primary rounded-full" />
-                Teil einer starken Sportgemeinschaft werden
+                {t.club.benefit3}
               </li>
               <li className="flex items-center gap-2 text-muted-foreground">
                 <div className="w-2 h-2 bg-primary rounded-full" />
-                Zugang zu Vereinsausrüstung und Einrichtungen
+                {t.club.benefit4}
               </li>
             </ul>
           </div>
@@ -170,15 +161,13 @@ const Club = () => {
       <section className="py-20">
         <div className="container mx-auto px-4">
           <div className="max-w-2xl mx-auto">
-            <h2 className="font-display text-3xl text-center mb-4">Mitgliedsantrag stellen</h2>
-            <p className="text-muted-foreground text-center mb-8">
-              Fülle das folgende Formular aus, um deinen Mitgliedsantrag zu stellen. Dies ist keine direkte Aufnahme, sondern ein optimierter Weg für dich, dem Verein beizutreten. Du erhältst weitere Informationen per E-Mail.
-            </p>
+            <h2 className="font-display text-3xl text-center mb-4">{t.club.formTitle}</h2>
+            <p className="text-muted-foreground text-center mb-8">{t.club.formDesc}</p>
             
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Member Type */}
               <div>
-                <label className="block text-sm font-medium mb-3">Mitgliedschaftsart <span className="text-primary">*</span></label>
+                <label className="block text-sm font-medium mb-3">{t.club.membershipType} <span className="text-primary">*</span></label>
                 <div className="flex gap-4">
                   <label className="flex items-center gap-2 cursor-pointer">
                     <input
@@ -188,7 +177,7 @@ const Club = () => {
                       onChange={() => setMemberType("active")}
                       className="w-4 h-4 accent-primary"
                     />
-                    <span>Aktives Mitglied</span>
+                    <span>{t.club.activeMember}</span>
                   </label>
                   <label className="flex items-center gap-2 cursor-pointer">
                     <input
@@ -198,7 +187,7 @@ const Club = () => {
                       onChange={() => setMemberType("supporting")}
                       className="w-4 h-4 accent-primary"
                     />
-                    <span>Fördermitglied</span>
+                    <span>{t.club.supportingMember}</span>
                   </label>
                 </div>
               </div>
@@ -207,13 +196,13 @@ const Club = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label htmlFor="lastName" className="block text-sm font-medium mb-2">
-                    Nachname <span className="text-primary">*</span>
+                    {t.club.lastName} <span className="text-primary">*</span>
                   </label>
                   <Input id="lastName" name="lastName" required />
                 </div>
                 <div>
                   <label htmlFor="firstName" className="block text-sm font-medium mb-2">
-                    Vorname <span className="text-primary">*</span>
+                    {t.club.firstName} <span className="text-primary">*</span>
                   </label>
                   <Input id="firstName" name="firstName" required />
                 </div>
@@ -222,13 +211,13 @@ const Club = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label htmlFor="dob" className="block text-sm font-medium mb-2">
-                    Geburtsdatum <span className="text-primary">*</span>
+                    {t.club.dob} <span className="text-primary">*</span>
                   </label>
                   <Input id="dob" name="dob" type="date" required />
                 </div>
                 <div>
                   <label htmlFor="pob" className="block text-sm font-medium mb-2">
-                    Geburtsort <span className="text-primary">*</span>
+                    {t.club.pob} <span className="text-primary">*</span>
                   </label>
                   <Input id="pob" name="pob" required />
                 </div>
@@ -237,13 +226,13 @@ const Club = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label htmlFor="profession" className="block text-sm font-medium mb-2">
-                    Beruf
+                    {t.club.profession}
                   </label>
                   <Input id="profession" name="profession" />
                 </div>
                 <div>
                   <label htmlFor="nationality" className="block text-sm font-medium mb-2">
-                    Nationalität
+                    {t.club.nationality}
                   </label>
                   <Input id="nationality" name="nationality" />
                 </div>
@@ -252,14 +241,14 @@ const Club = () => {
               {/* Address */}
               <div>
                 <label htmlFor="street" className="block text-sm font-medium mb-2">
-                  Straße, Hausnummer <span className="text-primary">*</span>
+                  {t.club.street} <span className="text-primary">*</span>
                 </label>
                 <Input id="street" name="street" required />
               </div>
 
               <div>
                 <label htmlFor="city" className="block text-sm font-medium mb-2">
-                  PLZ, Ort <span className="text-primary">*</span>
+                  {t.club.city} <span className="text-primary">*</span>
                 </label>
                 <Input id="city" name="city" placeholder="90411 Nürnberg" required />
               </div>
@@ -268,13 +257,13 @@ const Club = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label htmlFor="phone" className="block text-sm font-medium mb-2">
-                    Telefon
+                    {t.club.phone}
                   </label>
                   <Input id="phone" name="phone" type="tel" />
                 </div>
                 <div>
                   <label htmlFor="mobile" className="block text-sm font-medium mb-2">
-                    Mobil
+                    {t.club.mobile}
                   </label>
                   <Input id="mobile" name="mobile" type="tel" />
                 </div>
@@ -282,28 +271,26 @@ const Club = () => {
 
               <div>
                 <label htmlFor="email" className="block text-sm font-medium mb-2">
-                  E-Mail <span className="text-primary">*</span>
+                  {t.club.email} <span className="text-primary">*</span>
                 </label>
                 <Input id="email" name="email" type="email" required />
               </div>
 
               {/* SEPA Section */}
               <div className="border-t border-border pt-6 mt-6">
-                <h3 className="font-display text-xl mb-4">SEPA-Lastschriftmandat</h3>
-                <p className="text-muted-foreground text-sm mb-4">
-                  Für die Einziehung des Mitgliedsbeitrags benötigen wir deine Bankdaten.
-                </p>
+                <h3 className="font-display text-xl mb-4">{t.club.sepaTitle}</h3>
+                <p className="text-muted-foreground text-sm mb-4">{t.club.sepaDesc}</p>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label htmlFor="sepaLastName" className="block text-sm font-medium mb-2">
-                      Kontoinhaber Nachname
+                      {t.club.accountHolder} {t.club.lastName}
                     </label>
                     <Input id="sepaLastName" name="sepaLastName" />
                   </div>
                   <div>
                     <label htmlFor="sepaFirstName" className="block text-sm font-medium mb-2">
-                      Kontoinhaber Vorname
+                      {t.club.accountHolder} {t.club.firstName}
                     </label>
                     <Input id="sepaFirstName" name="sepaFirstName" />
                   </div>
@@ -311,7 +298,7 @@ const Club = () => {
                 
                 <div className="mt-4">
                   <label htmlFor="sepaIban" className="block text-sm font-medium mb-2">
-                    IBAN
+                    {t.club.iban}
                   </label>
                   <Input id="sepaIban" name="sepaIban" placeholder="DE89 3704 0044 0532 0130 00" />
                 </div>
@@ -319,13 +306,13 @@ const Club = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                   <div>
                     <label htmlFor="sepaBic" className="block text-sm font-medium mb-2">
-                      BIC
+                      {t.club.bic}
                     </label>
                     <Input id="sepaBic" name="sepaBic" />
                   </div>
                   <div>
                     <label htmlFor="sepaBank" className="block text-sm font-medium mb-2">
-                      Kreditinstitut
+                      {t.club.bank}
                     </label>
                     <Input id="sepaBank" name="sepaBank" />
                   </div>
@@ -333,7 +320,7 @@ const Club = () => {
               </div>
 
               <Button type="submit" size="lg" className="w-full" disabled={isSubmitting}>
-                {isSubmitting ? "Wird gesendet..." : "Antrag absenden"}
+                {isSubmitting ? t.club.submitting : t.club.submit}
               </Button>
             </form>
           </div>

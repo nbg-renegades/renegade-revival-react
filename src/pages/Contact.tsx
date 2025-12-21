@@ -6,10 +6,12 @@ import { Mail, Send } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { supabase } from "@/lib/supabase";
+import { useLanguage } from "@/hooks/useLanguage";
 
 const Contact = () => {
   const { toast } = useToast();
   const { executeRecaptcha } = useGoogleReCaptcha();
+  const { t } = useLanguage();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -39,16 +41,16 @@ const Contact = () => {
       if (error) throw error;
 
       toast({
-        title: "Nachricht gesendet!",
-        description: "Wir melden uns schnellstmöglich bei dir.",
+        title: t.contact.successTitle,
+        description: t.contact.successDesc,
       });
 
       (e.target as HTMLFormElement).reset();
     } catch (error) {
       console.error("Error submitting contact form:", error);
       toast({
-        title: "Fehler",
-        description: "Nachricht konnte nicht gesendet werden. Bitte versuche es erneut.",
+        title: t.contact.errorTitle,
+        description: t.contact.errorDesc,
         variant: "destructive",
       });
     } finally {
@@ -61,9 +63,9 @@ const Contact = () => {
       {/* Hero */}
       <section className="py-20 bg-card">
         <div className="container mx-auto px-4 text-center">
-          <h1 className="font-display text-5xl md:text-6xl mb-4">Kontakt</h1>
+          <h1 className="font-display text-5xl md:text-6xl mb-4">{t.contact.title}</h1>
           <p className="text-muted-foreground text-lg max-w-xl mx-auto">
-            Kontaktiere die Nürnberg Renegades
+            {t.contact.subtitle}
           </p>
         </div>
       </section>
@@ -74,7 +76,7 @@ const Contact = () => {
           <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12">
             {/* Info */}
             <div>
-              <h2 className="font-display text-3xl mb-6">Schreib uns</h2>
+              <h2 className="font-display text-3xl mb-6">{t.contact.getInTouch}</h2>
               
               <div className="bg-card-gradient rounded-lg p-6 border border-border">
                 <div className="flex items-center gap-4 mb-4">
@@ -82,7 +84,7 @@ const Contact = () => {
                     <Mail className="w-6 h-6 text-primary" />
                   </div>
                   <div>
-                    <h3 className="font-semibold">E-Mail</h3>
+                    <h3 className="font-semibold">{t.contact.email}</h3>
                     <a 
                       href="mailto:info@nuernberg-renegades.de"
                       className="text-primary hover:underline"
@@ -94,64 +96,62 @@ const Contact = () => {
               </div>
 
               <div className="mt-8">
-                <h3 className="font-display text-xl mb-3">Folge uns</h3>
-                <p className="text-muted-foreground text-sm">
-                  Bleibe mit uns auf Social Media verbunden für die neuesten Updates, Spielhighlights und Community-Events.
-                </p>
+                <h3 className="font-display text-xl mb-3">{t.contact.followUs}</h3>
+                <p className="text-muted-foreground text-sm">{t.contact.followUsDesc}</p>
               </div>
             </div>
 
             {/* Form */}
             <div>
-              <h2 className="font-display text-3xl mb-6">Nachricht senden</h2>
+              <h2 className="font-display text-3xl mb-6">{t.contact.sendMessage}</h2>
               
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
                   <label htmlFor="name" className="block text-sm font-medium mb-2">
-                    Name <span className="text-primary">*</span>
+                    {t.contact.name} <span className="text-primary">*</span>
                   </label>
                   <Input 
                     id="name"
                     name="name"
                     type="text"
-                    placeholder="Dein Name"
+                    placeholder={t.contact.namePlaceholder}
                     required
                   />
                 </div>
                 
                 <div>
                   <label htmlFor="email" className="block text-sm font-medium mb-2">
-                    E-Mail <span className="text-primary">*</span>
+                    {t.contact.email} <span className="text-primary">*</span>
                   </label>
                   <Input 
                     id="email"
                     name="email"
                     type="email"
-                    placeholder="deine@email.de"
+                    placeholder={t.contact.emailPlaceholder}
                     required
                   />
                 </div>
                 
                 <div>
                   <label htmlFor="subject" className="block text-sm font-medium mb-2">
-                    Betreff
+                    {t.contact.subject}
                   </label>
                   <Input 
                     id="subject"
                     name="subject"
                     type="text"
-                    placeholder="Worum geht es?"
+                    placeholder={t.contact.subjectPlaceholder}
                   />
                 </div>
                 
                 <div>
                   <label htmlFor="message" className="block text-sm font-medium mb-2">
-                    Nachricht <span className="text-primary">*</span>
+                    {t.contact.message} <span className="text-primary">*</span>
                   </label>
                   <Textarea 
                     id="message"
                     name="message"
-                    placeholder="Deine Nachricht..."
+                    placeholder={t.contact.messagePlaceholder}
                     rows={5}
                     required
                   />
@@ -164,11 +164,11 @@ const Contact = () => {
                   disabled={isSubmitting}
                 >
                   {isSubmitting ? (
-                    "Wird gesendet..."
+                    t.contact.submitting
                   ) : (
                     <>
                       <Send className="w-4 h-4 mr-2" />
-                      Nachricht senden
+                      {t.contact.submit}
                     </>
                   )}
                 </Button>

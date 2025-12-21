@@ -6,6 +6,7 @@ import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { supabase } from "@/lib/supabase";
+import { useLanguage } from "@/hooks/useLanguage";
 
 interface LocationCardProps {
   title: string;
@@ -33,6 +34,7 @@ const LocationCard = ({ title, time, address }: LocationCardProps) => (
 const Training = () => {
   const { toast } = useToast();
   const { executeRecaptcha } = useGoogleReCaptcha();
+  const { t } = useLanguage();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -64,16 +66,16 @@ const Training = () => {
       if (error) throw error;
 
       toast({
-        title: "Anfrage gesendet!",
-        description: "Wir melden uns bald bei dir für dein Probetraining.",
+        title: t.training.successTitle,
+        description: t.training.successDesc,
       });
 
       (e.target as HTMLFormElement).reset();
     } catch (error) {
       console.error("Error submitting tryout form:", error);
       toast({
-        title: "Fehler",
-        description: "Anfrage konnte nicht gesendet werden. Bitte versuche es erneut.",
+        title: t.training.errorTitle,
+        description: t.training.errorDesc,
         variant: "destructive",
       });
     } finally {
@@ -86,9 +88,9 @@ const Training = () => {
       {/* Hero */}
       <section className="py-20 bg-card">
         <div className="container mx-auto px-4 text-center">
-          <h1 className="font-display text-5xl md:text-6xl mb-4">Training</h1>
+          <h1 className="font-display text-5xl md:text-6xl mb-4">{t.training.title}</h1>
           <p className="text-muted-foreground text-lg max-w-xl mx-auto">
-            Komm zu unseren Trainings und werde Teil der Renegades
+            {t.training.subtitle}
           </p>
         </div>
       </section>
@@ -99,33 +101,31 @@ const Training = () => {
           <div className="max-w-4xl mx-auto">
             <div className="flex items-center gap-3 mb-8">
               <Calendar className="w-6 h-6 text-primary" />
-              <h2 className="font-display text-3xl">Off-Season (November - März)</h2>
+              <h2 className="font-display text-3xl">{t.training.offSeasonTitle}</h2>
             </div>
             
-            <p className="text-muted-foreground mb-8">
-              In der Off-Season trainieren wir zusätzlich dienstags in einer Halle, um auch im Winter unseren Trainingsplan einzuhalten.
-            </p>
+            <p className="text-muted-foreground mb-8">{t.training.offSeasonDesc}</p>
 
             <div className="flex items-center gap-3 mb-6">
               <Clock className="w-5 h-5 text-muted-foreground" />
-              <span className="font-semibold">Trainingszeiten</span>
+              <span className="font-semibold">{t.training.scheduleTitle}</span>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
               <div className="bg-secondary rounded-lg p-4">
-                <p className="font-semibold">Dienstag</p>
-                <p className="text-muted-foreground">20:00 - 22:00 Uhr</p>
+                <p className="font-semibold">{t.training.tuesday}</p>
+                <p className="text-muted-foreground">20:00 - 22:00</p>
               </div>
               <div className="bg-secondary rounded-lg p-4">
-                <p className="font-semibold">Donnerstag</p>
-                <p className="text-muted-foreground">19:00 - 21:00 Uhr</p>
+                <p className="font-semibold">{t.training.thursday}</p>
+                <p className="text-muted-foreground">19:00 - 21:00</p>
               </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <LocationCard
-                title="Dienstag"
-                time="20:00 - 22:00 Uhr"
+                title={t.training.tuesdayLocation}
+                time="20:00 - 22:00"
                 address={[
                   "Adalbert-Stifter-Schule",
                   "Julius-Leber-Straße 108",
@@ -133,8 +133,8 @@ const Training = () => {
                 ]}
               />
               <LocationCard
-                title="Donnerstag"
-                time="19:00 - 21:00 Uhr"
+                title={t.training.thursdayLocation}
+                time="19:00 - 21:00"
                 address={[
                   "Sportplatz",
                   "Kulmbacher Str. 1",
@@ -152,32 +152,30 @@ const Training = () => {
           <div className="max-w-4xl mx-auto">
             <div className="flex items-center gap-3 mb-8">
               <Calendar className="w-6 h-6 text-primary" />
-              <h2 className="font-display text-3xl">Saison (April - Oktober)</h2>
+              <h2 className="font-display text-3xl">{t.training.regularSeasonTitle}</h2>
             </div>
             
-            <p className="text-muted-foreground mb-8">
-              Während der Saison finden alle Trainings an unserem Hauptstandort statt.
-            </p>
+            <p className="text-muted-foreground mb-8">{t.training.regularSeasonDesc}</p>
 
             <div className="flex items-center gap-3 mb-6">
               <Clock className="w-5 h-5 text-muted-foreground" />
-              <span className="font-semibold">Trainingszeiten</span>
+              <span className="font-semibold">{t.training.scheduleTitle}</span>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
               <div className="bg-secondary rounded-lg p-4">
-                <p className="font-semibold">Dienstag</p>
-                <p className="text-muted-foreground">19:00 - 21:00 Uhr</p>
+                <p className="font-semibold">{t.training.tuesday}</p>
+                <p className="text-muted-foreground">19:00 - 21:00</p>
               </div>
               <div className="bg-secondary rounded-lg p-4">
-                <p className="font-semibold">Donnerstag</p>
-                <p className="text-muted-foreground">19:00 - 21:00 Uhr</p>
+                <p className="font-semibold">{t.training.thursday}</p>
+                <p className="text-muted-foreground">19:00 - 21:00</p>
               </div>
             </div>
 
             <LocationCard
-              title="Hauptstandort"
-              time="Alle Trainings"
+              title={t.training.mainLocation}
+              time={t.training.allSessions}
               address={[
                 "Sportanlage DJK BFC",
                 "Hofer Str. 30",
@@ -192,19 +190,19 @@ const Training = () => {
       <section className="py-20">
         <div className="container mx-auto px-4">
           <div className="max-w-xl mx-auto">
-            <h2 className="font-display text-3xl text-center mb-8">Probetraining anfragen</h2>
+            <h2 className="font-display text-3xl text-center mb-8">{t.training.tryoutTitle}</h2>
             
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label htmlFor="name" className="block text-sm font-medium mb-2">
-                    Name <span className="text-primary">*</span>
+                    {t.training.name} <span className="text-primary">*</span>
                   </label>
                   <Input id="name" name="name" type="text" required />
                 </div>
                 <div>
                   <label htmlFor="email" className="block text-sm font-medium mb-2">
-                    E-Mail <span className="text-primary">*</span>
+                    {t.training.email} <span className="text-primary">*</span>
                   </label>
                   <Input id="email" name="email" type="email" required />
                 </div>
@@ -213,13 +211,13 @@ const Training = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label htmlFor="phone" className="block text-sm font-medium mb-2">
-                    Telefon
+                    {t.training.phone}
                   </label>
                   <Input id="phone" name="phone" type="tel" />
                 </div>
                 <div>
                   <label htmlFor="age" className="block text-sm font-medium mb-2">
-                    Alter
+                    {t.training.age}
                   </label>
                   <Input id="age" name="age" type="number" min="0" />
                 </div>
@@ -227,20 +225,20 @@ const Training = () => {
               
               <div>
                 <label htmlFor="experience" className="block text-sm font-medium mb-2">
-                  Vorherige Erfahrung
+                  {t.training.experience}
                 </label>
-                <Input id="experience" name="experience" type="text" placeholder="z.B. Football, Basketball, etc." />
+                <Input id="experience" name="experience" type="text" placeholder={t.training.experiencePlaceholder} />
               </div>
               
               <div>
                 <label htmlFor="message" className="block text-sm font-medium mb-2">
-                  Nachricht
+                  {t.training.message}
                 </label>
-                <Textarea id="message" name="message" rows={4} placeholder="Erzähl uns etwas über dich..." />
+                <Textarea id="message" name="message" rows={4} placeholder={t.training.messagePlaceholder} />
               </div>
               
               <Button type="submit" size="lg" className="w-full" disabled={isSubmitting}>
-                {isSubmitting ? "Wird gesendet..." : "Anfrage senden"}
+                {isSubmitting ? t.training.submitting : t.training.submit}
               </Button>
             </form>
           </div>
