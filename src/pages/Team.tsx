@@ -22,6 +22,7 @@ const positionLabels: Record<string, string> = {
   quarterback: "Quarterback",
   blitz: "Rusher",
   center: "Center",
+  player: "Spieler",
 };
 
 const roleLabels: Record<string, string> = {
@@ -66,11 +67,7 @@ const Team = () => {
   const staff = members.filter(m => m.member_type === "staff");
   const players = members
     .filter(m => m.member_type === "player")
-    .sort((a, b) => {
-      const numA = parseInt(a.number || "999");
-      const numB = parseInt(b.number || "999");
-      return numA - numB;
-    });
+    .sort((a, b) => a.name.localeCompare(b.name, 'de'));
 
   return (
     <main className="min-h-screen pt-16">
