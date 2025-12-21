@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { Instagram } from "lucide-react";
-
+import logoAvatar from "@/assets/logo-avatar.png";
 const Footer = () => {
   const [logoError, setLogoError] = useState(false);
   const { t } = useLanguage();
@@ -21,9 +21,11 @@ const Footer = () => {
                   onError={() => setLogoError(true)}
                 />
               ) : (
-                <div className="h-10 w-10 bg-primary rounded-full flex items-center justify-center font-display text-primary-foreground text-lg">
-                  NR
-                </div>
+                <img 
+                  src={logoAvatar} 
+                  alt="Nürnberg Renegades" 
+                  className="h-10 w-auto"
+                />
               )}
               <span className="font-display text-lg tracking-wide">Nürnberg Renegades e.V.</span>
             </Link>
