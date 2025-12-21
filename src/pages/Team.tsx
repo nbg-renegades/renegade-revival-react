@@ -34,8 +34,9 @@ const PlayerCard = ({ member, isCoach = false }: PlayerCardProps) => (
   <div className="bg-card-gradient rounded-lg p-6 border border-border hover:border-primary/50 transition-all duration-300 hover:-translate-y-1 shadow-card group">
     <div className="w-20 h-20 mx-auto mb-4 bg-secondary rounded-full flex items-center justify-center overflow-hidden">
       <img 
-        src={playerPlaceholder} 
+        src={member.image_url || playerPlaceholder} 
         alt={member.name}
+        loading="lazy"
         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
       />
     </div>
