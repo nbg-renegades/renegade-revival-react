@@ -27,6 +27,7 @@ const Datenschutz = () => {
                 <li><a href="#drittlaender" className="hover:text-primary transition-colors">Datenverarbeitung in Drittländern</a></li>
                 <li><a href="#loeschung" className="hover:text-primary transition-colors">Löschung von Daten</a></li>
                 <li><a href="#cookies" className="hover:text-primary transition-colors">Einsatz von Cookies</a></li>
+                <li><a href="#openstreetmap" className="hover:text-primary transition-colors">OpenStreetMap</a></li>
                 <li><a href="#rechte" className="hover:text-primary transition-colors">Rechte der betroffenen Personen</a></li>
               </ul>
             </div>
@@ -136,6 +137,38 @@ const Datenschutz = () => {
               </p>
               <p className="text-muted-foreground">
                 <strong>Hinweise zur Einwilligung:</strong> Wir setzen Cookies im Einklang mit den gesetzlichen Vorschriften ein. Daher holen wir von den Nutzern eine vorhergehende Einwilligung ein, außer wenn diese gesetzlich nicht gefordert ist.
+              </p>
+            </section>
+
+            {/* OpenStreetMap */}
+            <section id="openstreetmap" className="mb-12">
+              <h2 className="font-display text-2xl mb-4 text-foreground">OpenStreetMap</h2>
+              <p className="text-muted-foreground mb-4">
+                Wir nutzen den Kartendienst OpenStreetMap zur Darstellung von Standorten unserer Trainingsgelände. Bei der Nutzung von OpenStreetMap werden Daten an die OpenStreetMap Foundation übertragen.
+              </p>
+              <h3 className="font-semibold text-foreground mb-2">Einwilligung</h3>
+              <p className="text-muted-foreground mb-4">
+                Die Karten werden erst nach Ihrer ausdrücklichen Einwilligung geladen. Vor dem Laden der Karte werden keine Daten an OpenStreetMap übertragen. Ihre Einwilligung wird lokal in Ihrem Browser gespeichert und kann jederzeit widerrufen werden.
+              </p>
+              <h3 className="font-semibold text-foreground mb-2">Verarbeitete Daten</h3>
+              <ul className="list-disc list-inside text-muted-foreground mb-4 space-y-1">
+                <li>IP-Adresse</li>
+                <li>Geräteinformationen (Browser, Betriebssystem)</li>
+                <li>Angefragte Kartenausschnitte</li>
+              </ul>
+              <h3 className="font-semibold text-foreground mb-2">Rechtsgrundlage</h3>
+              <p className="text-muted-foreground mb-4">
+                Die Verarbeitung erfolgt auf Grundlage Ihrer Einwilligung (Art. 6 Abs. 1 S. 1 lit. a DSGVO).
+              </p>
+              <h3 className="font-semibold text-foreground mb-2">Widerruf der Einwilligung</h3>
+              <p className="text-muted-foreground mb-4">
+                Sie können Ihre Einwilligung jederzeit widerrufen, indem Sie die Cookies in Ihrem Browser löschen oder die Karten nicht mehr laden. Die Rechtmäßigkeit der bis zum Widerruf erfolgten Datenverarbeitung bleibt unberührt.
+              </p>
+              <p className="text-muted-foreground">
+                <strong>Anbieter:</strong> OpenStreetMap Foundation, St John's Innovation Centre, Cowley Road, Cambridge, CB4 0WS, United Kingdom. 
+                <a href="https://wiki.osmfoundation.org/wiki/Privacy_Policy" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline ml-1">
+                  Datenschutzerklärung von OpenStreetMap
+                </a>
               </p>
             </section>
 
