@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useLanguage } from "@/hooks/useLanguage";
+import { Instagram } from "lucide-react";
 
 const Footer = () => {
   const [logoError, setLogoError] = useState(false);
@@ -88,7 +89,7 @@ const Footer = () => {
             </ul>
 
             <h4 className="font-display text-lg mb-4 mt-6 text-primary">{t.nav.contact}</h4>
-            <div className="space-y-2 text-sm text-muted-foreground">
+            <div className="space-y-3 text-sm text-muted-foreground">
               <p>
                 <a 
                   href="mailto:info@nuernberg-renegades.de" 
@@ -97,6 +98,15 @@ const Footer = () => {
                   info@nuernberg-renegades.de
                 </a>
               </p>
+              <a 
+                href="https://www.instagram.com/renegades_nuernberg/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 hover:text-primary transition-colors"
+              >
+                <Instagram className="w-4 h-4" />
+                @renegades_nuernberg
+              </a>
               <p>Nürnberg, Germany</p>
             </div>
           </div>

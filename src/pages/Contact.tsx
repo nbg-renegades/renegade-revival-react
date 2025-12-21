@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Mail, Send } from "lucide-react";
+import { Mail, Send, Instagram } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { supabase } from "@/lib/supabase";
@@ -95,9 +95,28 @@ const Contact = () => {
                 </div>
               </div>
 
-              <div className="mt-8">
-                <h3 className="font-display text-xl mb-3">{t.contact.followUs}</h3>
-                <p className="text-muted-foreground text-sm">{t.contact.followUsDesc}</p>
+              <div className="mt-6 bg-card-gradient rounded-lg p-6 border border-border">
+                <div className="flex items-center gap-4">
+                  <a 
+                    href="https://www.instagram.com/renegades_nuernberg/" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400 flex items-center justify-center hover:scale-110 transition-transform"
+                  >
+                    <Instagram className="w-6 h-6 text-white" />
+                  </a>
+                  <div>
+                    <h3 className="font-semibold">{t.contact.followUs}</h3>
+                    <a 
+                      href="https://www.instagram.com/renegades_nuernberg/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-primary hover:underline"
+                    >
+                      @renegades_nuernberg
+                    </a>
+                  </div>
+                </div>
               </div>
             </div>
 
