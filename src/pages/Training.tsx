@@ -93,21 +93,21 @@ const Training = () => {
     }
   };
 
-  // Training location coordinates
+  // Training location coordinates (verified via OpenStreetMap Nominatim)
   const locations = {
     adalbertStifter: {
-      lat: 49.4089,
-      lng: 11.1289,
+      lat: 49.3950080,
+      lng: 11.1345945,
       address: ["Adalbert-Stifter-Schule", "Julius-Leber-Straße 108", "90473 Nürnberg"]
     },
     kulmbach: {
-      lat: 49.4689,
-      lng: 11.0847,
-      address: ["Sportplatz", "Kulmbacher Str. 1", "90411 Nürnberg"]
+      lat: 49.4890233,
+      lng: 11.1133299,
+      address: ["Sportplatz Ziegelstein", "Kulmbacher Str. 1", "90411 Nürnberg"]
     },
     djkBfc: {
-      lat: 49.4703,
-      lng: 11.0889,
+      lat: 49.4907319,
+      lng: 11.1114578,
       address: ["Sportanlage DJK BFC", "Hofer Str. 30", "90411 Nürnberg"]
     }
   };
