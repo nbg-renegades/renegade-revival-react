@@ -68,26 +68,28 @@ const Navbar = () => {
         </div>
 
         {/* Mobile Navigation */}
-        {isOpen && (
-          <div className="absolute top-16 left-0 right-0 bg-background border-b border-border md:hidden">
-            <div className="flex flex-col p-4">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.path}
-                  to={link.path}
-                  onClick={() => setIsOpen(false)}
+        <div 
+          className={`absolute top-16 left-0 right-0 bg-background border-b border-border md:hidden transition-all duration-300 ease-out ${
+            isOpen ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-2 pointer-events-none"
+          }`}
+        >
+          <div className="flex flex-col p-4 pb-6 safe-area-inset-bottom">
+            {navLinks.map((link) => (
+              <Link
+                key={link.path}
+                to={link.path}
+                onClick={() => setIsOpen(false)}
+              >
+                <Button 
+                  variant="ghost" 
+                  className={`w-full justify-start h-12 text-base ${location.pathname === link.path ? "text-primary bg-primary/10" : ""}`}
                 >
-                  <Button 
-                    variant="ghost" 
-                    className={`w-full justify-start ${location.pathname === link.path ? "text-primary" : ""}`}
-                  >
-                    {link.name}
-                  </Button>
-                </Link>
-              ))}
-            </div>
+                  {link.name}
+                </Button>
+              </Link>
+            ))}
           </div>
-        )}
+        </div>
       </nav>
     </header>
   );

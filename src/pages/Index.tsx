@@ -11,7 +11,7 @@ const Index = () => {
   return (
     <main className="min-h-screen pt-16">
       {/* Hero Section */}
-      <section className="relative h-[90vh] flex items-center justify-center overflow-hidden">
+      <section className="relative min-h-[85vh] md:h-[90vh] flex items-center justify-center overflow-hidden py-12">
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{ backgroundImage: `url(${heroImage})` }}
@@ -19,7 +19,7 @@ const Index = () => {
         <div className="absolute inset-0 bg-hero-gradient" />
         
         <div className="relative z-10 container mx-auto px-4 text-center">
-          <h1 className="font-display text-5xl md:text-7xl lg:text-8xl mb-6 animate-fade-up">
+          <h1 className="font-display text-4xl sm:text-5xl md:text-7xl lg:text-8xl mb-6 animate-fade-up px-2">
             {t.index.heroTitle}<br />
             <span className="text-gradient">{t.index.heroSubtitle}</span>
           </h1>
