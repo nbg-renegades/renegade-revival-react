@@ -7,15 +7,19 @@ import { useToast } from "@/hooks/use-toast";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { supabase } from "@/lib/supabase";
 import { useLanguage } from "@/hooks/useLanguage";
+import MapConsent from "@/components/MapConsent";
 
 interface LocationCardProps {
   title: string;
   time: string;
   address: string[];
+  latitude: number;
+  longitude: number;
+  language: "de" | "en";
 }
 
-const LocationCard = ({ title, time, address }: LocationCardProps) => (
-  <div className="bg-card-gradient rounded-lg p-6 border border-border">
+const LocationCard = ({ title, time, address, latitude, longitude, language }: LocationCardProps) => (
+  <div className="bg-card-gradient rounded-lg p-6 border border-border space-y-4">
     <div className="flex items-start gap-4">
       <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
         <MapPin className="w-5 h-5 text-primary" />
@@ -28,13 +32,20 @@ const LocationCard = ({ title, time, address }: LocationCardProps) => (
         ))}
       </div>
     </div>
+    <MapConsent
+      latitude={latitude}
+      longitude={longitude}
+      title={title}
+      address={address.join(", ")}
+      language={language}
+    />
   </div>
 );
 
 const Training = () => {
   const { toast } = useToast();
   const { executeRecaptcha } = useGoogleReCaptcha();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -76,10 +87,28 @@ const Training = () => {
       toast({
         title: t.training.errorTitle,
         description: t.training.errorDesc,
-        variant: "destructive",
       });
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  // Training location coordinates
+  const locations = {
+    adalbertStifter: {
+      lat: 49.4089,
+      lng: 11.1289,
+      address: ["Adalbert-Stifter-Schule", "Julius-Leber-Straße 108", "90473 Nürnberg"]
+    },
+    kulmbach: {
+      lat: 49.4689,
+      lng: 11.0847,
+      address: ["Sportplatz", "Kulmbacher Str. 1", "90411 Nürnberg"]
+    },
+    djkBfc: {
+      lat: 49.4703,
+      lng: 11.0889,
+      address: ["Sportanlage DJK BFC", "Hofer Str. 30", "90411 Nürnberg"]
     }
   };
 
@@ -126,20 +155,18 @@ const Training = () => {
               <LocationCard
                 title={t.training.tuesdayLocation}
                 time="20:00 - 22:00"
-                address={[
-                  "Adalbert-Stifter-Schule",
-                  "Julius-Leber-Straße 108",
-                  "90473 Nürnberg"
-                ]}
+                address={locations.adalbertStifter.address}
+                latitude={locations.adalbertStifter.lat}
+                longitude={locations.adalbertStifter.lng}
+                language={language}
               />
               <LocationCard
                 title={t.training.thursdayLocation}
                 time="19:00 - 21:00"
-                address={[
-                  "Sportplatz",
-                  "Kulmbacher Str. 1",
-                  "90411 Nürnberg"
-                ]}
+                address={locations.kulmbach.address}
+                latitude={locations.kulmbach.lat}
+                longitude={locations.kulmbach.lng}
+                language={language}
               />
             </div>
           </div>
@@ -176,11 +203,10 @@ const Training = () => {
             <LocationCard
               title={t.training.mainLocation}
               time={t.training.allSessions}
-              address={[
-                "Sportanlage DJK BFC",
-                "Hofer Str. 30",
-                "90411 Nürnberg"
-              ]}
+              address={locations.djkBfc.address}
+              latitude={locations.djkBfc.lat}
+              longitude={locations.djkBfc.lng}
+              language={language}
             />
           </div>
         </div>
