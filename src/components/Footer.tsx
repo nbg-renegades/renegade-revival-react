@@ -38,8 +38,18 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
+                <Link to="/club" className="text-muted-foreground hover:text-primary transition-colors">
+                  About the Club
+                </Link>
+              </li>
+              <li>
                 <Link to="/training" className="text-muted-foreground hover:text-primary transition-colors">
                   Training Schedule
+                </Link>
+              </li>
+              <li>
+                <Link to="/sponsoring" className="text-muted-foreground hover:text-primary transition-colors">
+                  Sponsors
                 </Link>
               </li>
               <li>
@@ -73,6 +83,20 @@ const Footer = () => {
               </p>
               <p>Nürnberg, Germany</p>
             </div>
+
+            <h4 className="font-display text-lg mb-4 mt-6 text-primary">Legal</h4>
+            <ul className="space-y-2 text-sm">
+              <li>
+                <Link to="/impressum" className="text-muted-foreground hover:text-primary transition-colors">
+                  Impressum
+                </Link>
+              </li>
+              <li>
+                <Link to="/datenschutz" className="text-muted-foreground hover:text-primary transition-colors">
+                  Datenschutz
+                </Link>
+              </li>
+            </ul>
           </div>
         </div>
 

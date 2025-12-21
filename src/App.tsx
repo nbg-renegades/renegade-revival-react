@@ -9,6 +9,10 @@ import Index from "./pages/Index";
 import Team from "./pages/Team";
 import Training from "./pages/Training";
 import Contact from "./pages/Contact";
+import Sponsoring from "./pages/Sponsoring";
+import Club from "./pages/Club";
+import Impressum from "./pages/Impressum";
+import Datenschutz from "./pages/Datenschutz";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -25,6 +29,10 @@ const App = () => (
           <Route path="/team" element={<Team />} />
           <Route path="/training" element={<Training />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/sponsoring" element={<Sponsoring />} />
+          <Route path="/club" element={<Club />} />
+          <Route path="/impressum" element={<Impressum />} />
+          <Route path="/datenschutz" element={<Datenschutz />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
         <Footer />
