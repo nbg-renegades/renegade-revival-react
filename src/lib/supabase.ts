@@ -5,4 +5,6 @@ const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYm
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-export const RECAPTCHA_SITE_KEY = '6LfTgr8qAAAAAB6vUF6Y8w5DZSuINMy1uYMYa0TB';
+// reCAPTCHA site key - public key designed to be used client-side
+// Note: The secret key for server-side verification must be stored securely in Edge Function environment variables
+export const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY || '6LfTgr8qAAAAAB6vUF6Y8w5DZSuINMy1uYMYa0TB';
