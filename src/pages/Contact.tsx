@@ -4,25 +4,56 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Mail, Send } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
+import { supabase } from "@/lib/supabase";
 
 const Contact = () => {
   const { toast } = useToast();
+  const { executeRecaptcha } = useGoogleReCaptcha();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
-    // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    toast({
-      title: "Message sent!",
-      description: "We'll get back to you as soon as possible.",
-    });
-    
-    setIsSubmitting(false);
-    (e.target as HTMLFormElement).reset();
+
+    try {
+      if (!executeRecaptcha) {
+        throw new Error("reCAPTCHA not available");
+      }
+
+      const recaptchaToken = await executeRecaptcha("contact_form");
+      const formData = new FormData(e.currentTarget);
+
+      const message = {
+        name: formData.get("name") as string,
+        email: formData.get("email") as string,
+        subject: formData.get("subject") as string || "General Inquiry",
+        message: formData.get("message") as string,
+        recaptchaToken,
+      };
+
+      const { error } = await supabase.functions.invoke("send-contact-email", {
+        body: { message },
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "Nachricht gesendet!",
+        description: "Wir melden uns schnellstmöglich bei dir.",
+      });
+
+      (e.target as HTMLFormElement).reset();
+    } catch (error) {
+      console.error("Error submitting contact form:", error);
+      toast({
+        title: "Fehler",
+        description: "Nachricht konnte nicht gesendet werden. Bitte versuche es erneut.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -30,9 +61,9 @@ const Contact = () => {
       {/* Hero */}
       <section className="py-20 bg-card">
         <div className="container mx-auto px-4 text-center">
-          <h1 className="font-display text-5xl md:text-6xl mb-4">Contact Us</h1>
+          <h1 className="font-display text-5xl md:text-6xl mb-4">Kontakt</h1>
           <p className="text-muted-foreground text-lg max-w-xl mx-auto">
-            Get in touch with the Nürnberg Renegades
+            Kontaktiere die Nürnberg Renegades
           </p>
         </div>
       </section>
@@ -43,7 +74,7 @@ const Contact = () => {
           <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12">
             {/* Info */}
             <div>
-              <h2 className="font-display text-3xl mb-6">Get in Touch</h2>
+              <h2 className="font-display text-3xl mb-6">Schreib uns</h2>
               
               <div className="bg-card-gradient rounded-lg p-6 border border-border">
                 <div className="flex items-center gap-4 mb-4">
@@ -51,7 +82,7 @@ const Contact = () => {
                     <Mail className="w-6 h-6 text-primary" />
                   </div>
                   <div>
-                    <h3 className="font-semibold">Email</h3>
+                    <h3 className="font-semibold">E-Mail</h3>
                     <a 
                       href="mailto:info@nuernberg-renegades.de"
                       className="text-primary hover:underline"
@@ -63,64 +94,64 @@ const Contact = () => {
               </div>
 
               <div className="mt-8">
-                <h3 className="font-display text-xl mb-3">Follow Us</h3>
+                <h3 className="font-display text-xl mb-3">Folge uns</h3>
                 <p className="text-muted-foreground text-sm">
-                  Stay connected with us on social media for the latest updates, game highlights, and community events.
+                  Bleibe mit uns auf Social Media verbunden für die neuesten Updates, Spielhighlights und Community-Events.
                 </p>
               </div>
             </div>
 
             {/* Form */}
             <div>
-              <h2 className="font-display text-3xl mb-6">Send us a Message</h2>
+              <h2 className="font-display text-3xl mb-6">Nachricht senden</h2>
               
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
                   <label htmlFor="name" className="block text-sm font-medium mb-2">
-                    Name
+                    Name <span className="text-primary">*</span>
                   </label>
                   <Input 
                     id="name"
                     name="name"
                     type="text"
-                    placeholder="Your name"
+                    placeholder="Dein Name"
                     required
                   />
                 </div>
                 
                 <div>
                   <label htmlFor="email" className="block text-sm font-medium mb-2">
-                    Email
+                    E-Mail <span className="text-primary">*</span>
                   </label>
                   <Input 
                     id="email"
                     name="email"
                     type="email"
-                    placeholder="your@email.com"
+                    placeholder="deine@email.de"
                     required
                   />
                 </div>
                 
                 <div>
                   <label htmlFor="subject" className="block text-sm font-medium mb-2">
-                    Subject
+                    Betreff
                   </label>
                   <Input 
                     id="subject"
                     name="subject"
                     type="text"
-                    placeholder="What's this about?"
+                    placeholder="Worum geht es?"
                   />
                 </div>
                 
                 <div>
                   <label htmlFor="message" className="block text-sm font-medium mb-2">
-                    Message
+                    Nachricht <span className="text-primary">*</span>
                   </label>
                   <Textarea 
                     id="message"
                     name="message"
-                    placeholder="Your message..."
+                    placeholder="Deine Nachricht..."
                     rows={5}
                     required
                   />
@@ -133,11 +164,11 @@ const Contact = () => {
                   disabled={isSubmitting}
                 >
                   {isSubmitting ? (
-                    "Sending..."
+                    "Wird gesendet..."
                   ) : (
                     <>
                       <Send className="w-4 h-4 mr-2" />
-                      Send Message
+                      Nachricht senden
                     </>
                   )}
                 </Button>
