@@ -3,25 +3,80 @@ import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { Trophy, Users, Target, Award } from "lucide-react";
+import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
+import { supabase } from "@/lib/supabase";
 
 const Club = () => {
   const { toast } = useToast();
+  const { executeRecaptcha } = useGoogleReCaptcha();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [memberType, setMemberType] = useState<"active" | "supporting">("active");
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    toast({
-      title: "Application submitted!",
-      description: "We'll contact you soon with further information.",
-    });
-    
-    setIsSubmitting(false);
-    (e.target as HTMLFormElement).reset();
+
+    try {
+      if (!executeRecaptcha) {
+        throw new Error("reCAPTCHA not available");
+      }
+
+      const recaptchaToken = await executeRecaptcha("membership_form");
+      const formData = new FormData(e.currentTarget);
+
+      // Get current month and year for join date
+      const now = new Date();
+      const currentMonth = String(now.getMonth() + 1).padStart(2, "0");
+      const currentYear = String(now.getFullYear());
+
+      const application = {
+        membership_active: memberType === "active",
+        membership_support: memberType === "supporting",
+        name: formData.get("lastName") as string,
+        firstname: formData.get("firstName") as string,
+        birthday: formData.get("dob") as string,
+        birthplace: formData.get("pob") as string,
+        profession: formData.get("profession") as string || "",
+        nationality: formData.get("nationality") as string || "",
+        street: formData.get("street") as string,
+        plz_town: formData.get("city") as string,
+        tel: formData.get("phone") as string || "",
+        fax: "",
+        mobile: formData.get("mobile") as string || "",
+        email: formData.get("email") as string,
+        joindate_month: currentMonth,
+        joindate_year: currentYear,
+        sepa_account_holder_name: formData.get("sepaLastName") as string || "",
+        sepa_account_holder_firstname: formData.get("sepaFirstName") as string || "",
+        sepa_iban: formData.get("sepaIban") as string || "",
+        sepa_bic: formData.get("sepaBic") as string || "",
+        sepa_bank: formData.get("sepaBank") as string || "",
+        recaptchaToken,
+      };
+
+      const { error } = await supabase.functions.invoke("send-membership-application", {
+        body: { application },
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "Antrag gesendet!",
+        description: "Wir melden uns bald mit weiteren Informationen bei dir.",
+      });
+
+      (e.target as HTMLFormElement).reset();
+      setMemberType("active");
+    } catch (error) {
+      console.error("Error submitting membership form:", error);
+      toast({
+        title: "Fehler",
+        description: "Antrag konnte nicht gesendet werden. Bitte versuche es erneut.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -29,9 +84,9 @@ const Club = () => {
       {/* Hero */}
       <section className="py-20 bg-card">
         <div className="container mx-auto px-4 text-center">
-          <h1 className="font-display text-5xl md:text-6xl mb-4">Our Club</h1>
+          <h1 className="font-display text-5xl md:text-6xl mb-4">Unser Verein</h1>
           <p className="text-muted-foreground text-lg max-w-xl mx-auto">
-            Learn more about Nürnberg Renegades e.V.
+            Erfahre mehr über Nürnberg Renegades e.V.
           </p>
         </div>
       </section>
@@ -40,36 +95,36 @@ const Club = () => {
       <section className="py-16">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
-            <h2 className="font-display text-3xl mb-8">About Nürnberg Renegades e.V.</h2>
+            <h2 className="font-display text-3xl mb-8">Über Nürnberg Renegades e.V.</h2>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
               <div className="bg-card-gradient rounded-lg p-6 border border-border">
                 <Trophy className="w-8 h-8 text-primary mb-4" />
-                <h3 className="font-display text-xl mb-2">Club Foundation</h3>
+                <h3 className="font-display text-xl mb-2">Vereinsgründung</h3>
                 <p className="text-muted-foreground text-sm">
-                  Nürnberg Renegades e.V. was founded in 2022 with the goal of establishing and promoting flag football in the Nürnberg region.
+                  Nürnberg Renegades e.V. wurde 2022 mit dem Ziel gegründet, Flag Football in der Region Nürnberg zu etablieren und zu fördern.
                 </p>
               </div>
               
               <div className="bg-card-gradient rounded-lg p-6 border border-border">
                 <Users className="w-8 h-8 text-primary mb-4" />
-                <h3 className="font-display text-xl mb-2">Club Leadership</h3>
+                <h3 className="font-display text-xl mb-2">Vereinsführung</h3>
                 <p className="text-muted-foreground text-sm">
-                  Our club is led by a dedicated board consisting of experienced players and sports managers working on a voluntary basis.
+                  Unser Verein wird von einem engagierten Vorstand geleitet, der aus erfahrenen Spielern und Sportmanagern besteht, die ehrenamtlich arbeiten.
                 </p>
               </div>
               
               <div className="bg-card-gradient rounded-lg p-6 border border-border">
                 <Award className="w-8 h-8 text-primary mb-4" />
-                <h3 className="font-display text-xl mb-2">Achievements</h3>
+                <h3 className="font-display text-xl mb-2">Erfolge</h3>
                 <p className="text-muted-foreground text-sm">
-                  Promotion to the 1st DFFL Division, multiple regional tournament victories, and the development of over 50 active players.
+                  Aufstieg in die 1. DFFL Division, mehrere regionale Turniersiege und die Entwicklung von über 50 aktiven Spielern.
                 </p>
               </div>
             </div>
 
             <p className="text-muted-foreground mb-8">
-              What started as a small group of football enthusiasts has developed into one of the leading flag football clubs in Bavaria. Our club is proud to support both beginners and experienced players in their athletic journey.
+              Was als kleine Gruppe von Footballbegeisterten begann, hat sich zu einem der führenden Flag Football Vereine in Bayern entwickelt. Unser Verein ist stolz darauf, sowohl Anfänger als auch erfahrene Spieler auf ihrem sportlichen Weg zu unterstützen.
             </p>
           </div>
         </div>
@@ -79,32 +134,32 @@ const Club = () => {
       <section className="py-16 bg-card">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
-            <h2 className="font-display text-3xl mb-4">Become a Member</h2>
+            <h2 className="font-display text-3xl mb-4">Mitglied werden</h2>
             <p className="text-muted-foreground mb-8">
-              Become part of our flag football family! As a club member, you get access to professional training, tournaments, and a great community of sports enthusiasts.
+              Werde Teil unserer Flag Football Familie! Als Vereinsmitglied erhältst du Zugang zu professionellem Training, Turnieren und einer tollen Gemeinschaft von Sportbegeisterten.
             </p>
 
             <div className="flex items-center gap-3 mb-6">
               <Target className="w-5 h-5 text-primary" />
-              <span className="font-semibold">Membership Benefits</span>
+              <span className="font-semibold">Mitgliedsvorteile</span>
             </div>
 
             <ul className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-8">
               <li className="flex items-center gap-2 text-muted-foreground">
                 <div className="w-2 h-2 bg-primary rounded-full" />
-                Professional training with experienced coaches
+                Professionelles Training mit erfahrenen Trainern
               </li>
               <li className="flex items-center gap-2 text-muted-foreground">
                 <div className="w-2 h-2 bg-primary rounded-full" />
-                Participation in regional and national tournaments
+                Teilnahme an regionalen und nationalen Turnieren
               </li>
               <li className="flex items-center gap-2 text-muted-foreground">
                 <div className="w-2 h-2 bg-primary rounded-full" />
-                Become part of a strong sports community
+                Teil einer starken Sportgemeinschaft werden
               </li>
               <li className="flex items-center gap-2 text-muted-foreground">
                 <div className="w-2 h-2 bg-primary rounded-full" />
-                Access to club equipment and facilities
+                Zugang zu Vereinsausrüstung und Einrichtungen
               </li>
             </ul>
           </div>
@@ -115,15 +170,15 @@ const Club = () => {
       <section className="py-20">
         <div className="container mx-auto px-4">
           <div className="max-w-2xl mx-auto">
-            <h2 className="font-display text-3xl text-center mb-4">Submit Membership Application</h2>
+            <h2 className="font-display text-3xl text-center mb-4">Mitgliedsantrag stellen</h2>
             <p className="text-muted-foreground text-center mb-8">
-              Fill out the following form to submit your membership application. This is not a direct acceptance, but an optimized way for you to join the club. You will receive further information via email.
+              Fülle das folgende Formular aus, um deinen Mitgliedsantrag zu stellen. Dies ist keine direkte Aufnahme, sondern ein optimierter Weg für dich, dem Verein beizutreten. Du erhältst weitere Informationen per E-Mail.
             </p>
             
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Member Type */}
               <div>
-                <label className="block text-sm font-medium mb-3">Membership Type <span className="text-primary">*</span></label>
+                <label className="block text-sm font-medium mb-3">Mitgliedschaftsart <span className="text-primary">*</span></label>
                 <div className="flex gap-4">
                   <label className="flex items-center gap-2 cursor-pointer">
                     <input
@@ -133,7 +188,7 @@ const Club = () => {
                       onChange={() => setMemberType("active")}
                       className="w-4 h-4 accent-primary"
                     />
-                    <span>Active Member</span>
+                    <span>Aktives Mitglied</span>
                   </label>
                   <label className="flex items-center gap-2 cursor-pointer">
                     <input
@@ -143,7 +198,7 @@ const Club = () => {
                       onChange={() => setMemberType("supporting")}
                       className="w-4 h-4 accent-primary"
                     />
-                    <span>Supporting Member</span>
+                    <span>Fördermitglied</span>
                   </label>
                 </div>
               </div>
@@ -152,13 +207,13 @@ const Club = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label htmlFor="lastName" className="block text-sm font-medium mb-2">
-                    Last Name <span className="text-primary">*</span>
+                    Nachname <span className="text-primary">*</span>
                   </label>
                   <Input id="lastName" name="lastName" required />
                 </div>
                 <div>
                   <label htmlFor="firstName" className="block text-sm font-medium mb-2">
-                    First Name <span className="text-primary">*</span>
+                    Vorname <span className="text-primary">*</span>
                   </label>
                   <Input id="firstName" name="firstName" required />
                 </div>
@@ -167,13 +222,13 @@ const Club = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label htmlFor="dob" className="block text-sm font-medium mb-2">
-                    Date of Birth <span className="text-primary">*</span>
+                    Geburtsdatum <span className="text-primary">*</span>
                   </label>
                   <Input id="dob" name="dob" type="date" required />
                 </div>
                 <div>
                   <label htmlFor="pob" className="block text-sm font-medium mb-2">
-                    Place of Birth <span className="text-primary">*</span>
+                    Geburtsort <span className="text-primary">*</span>
                   </label>
                   <Input id="pob" name="pob" required />
                 </div>
@@ -182,13 +237,13 @@ const Club = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label htmlFor="profession" className="block text-sm font-medium mb-2">
-                    Profession
+                    Beruf
                   </label>
                   <Input id="profession" name="profession" />
                 </div>
                 <div>
                   <label htmlFor="nationality" className="block text-sm font-medium mb-2">
-                    Nationality
+                    Nationalität
                   </label>
                   <Input id="nationality" name="nationality" />
                 </div>
@@ -197,14 +252,14 @@ const Club = () => {
               {/* Address */}
               <div>
                 <label htmlFor="street" className="block text-sm font-medium mb-2">
-                  Street <span className="text-primary">*</span>
+                  Straße, Hausnummer <span className="text-primary">*</span>
                 </label>
                 <Input id="street" name="street" required />
               </div>
 
               <div>
                 <label htmlFor="city" className="block text-sm font-medium mb-2">
-                  Postal Code, City <span className="text-primary">*</span>
+                  PLZ, Ort <span className="text-primary">*</span>
                 </label>
                 <Input id="city" name="city" placeholder="90411 Nürnberg" required />
               </div>
@@ -213,13 +268,13 @@ const Club = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label htmlFor="phone" className="block text-sm font-medium mb-2">
-                    Phone
+                    Telefon
                   </label>
                   <Input id="phone" name="phone" type="tel" />
                 </div>
                 <div>
                   <label htmlFor="mobile" className="block text-sm font-medium mb-2">
-                    Mobile
+                    Mobil
                   </label>
                   <Input id="mobile" name="mobile" type="tel" />
                 </div>
@@ -227,13 +282,58 @@ const Club = () => {
 
               <div>
                 <label htmlFor="email" className="block text-sm font-medium mb-2">
-                  Email <span className="text-primary">*</span>
+                  E-Mail <span className="text-primary">*</span>
                 </label>
                 <Input id="email" name="email" type="email" required />
               </div>
 
+              {/* SEPA Section */}
+              <div className="border-t border-border pt-6 mt-6">
+                <h3 className="font-display text-xl mb-4">SEPA-Lastschriftmandat</h3>
+                <p className="text-muted-foreground text-sm mb-4">
+                  Für die Einziehung des Mitgliedsbeitrags benötigen wir deine Bankdaten.
+                </p>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label htmlFor="sepaLastName" className="block text-sm font-medium mb-2">
+                      Kontoinhaber Nachname
+                    </label>
+                    <Input id="sepaLastName" name="sepaLastName" />
+                  </div>
+                  <div>
+                    <label htmlFor="sepaFirstName" className="block text-sm font-medium mb-2">
+                      Kontoinhaber Vorname
+                    </label>
+                    <Input id="sepaFirstName" name="sepaFirstName" />
+                  </div>
+                </div>
+                
+                <div className="mt-4">
+                  <label htmlFor="sepaIban" className="block text-sm font-medium mb-2">
+                    IBAN
+                  </label>
+                  <Input id="sepaIban" name="sepaIban" placeholder="DE89 3704 0044 0532 0130 00" />
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                  <div>
+                    <label htmlFor="sepaBic" className="block text-sm font-medium mb-2">
+                      BIC
+                    </label>
+                    <Input id="sepaBic" name="sepaBic" />
+                  </div>
+                  <div>
+                    <label htmlFor="sepaBank" className="block text-sm font-medium mb-2">
+                      Kreditinstitut
+                    </label>
+                    <Input id="sepaBank" name="sepaBank" />
+                  </div>
+                </div>
+              </div>
+
               <Button type="submit" size="lg" className="w-full" disabled={isSubmitting}>
-                {isSubmitting ? "Submitting..." : "Submit Application"}
+                {isSubmitting ? "Wird gesendet..." : "Antrag absenden"}
               </Button>
             </form>
           </div>
