@@ -1,8 +1,10 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import { useLanguage } from "@/hooks/useLanguage";
 
 const Footer = () => {
   const [logoError, setLogoError] = useState(false);
+  const { t } = useLanguage();
 
   return (
     <footer className="bg-card border-t border-border py-12">
@@ -25,36 +27,36 @@ const Footer = () => {
               <span className="font-display text-lg tracking-wide">Nürnberg Renegades e.V.</span>
             </Link>
             <p className="text-muted-foreground text-sm">
-              First Division DFFL Team. Experience Flag Football at its best in Nürnberg.
+              {t.footer.description}
             </p>
           </div>
 
           <div>
-            <h4 className="font-display text-lg mb-4 text-primary">Quick Links</h4>
+            <h4 className="font-display text-lg mb-4 text-primary">{t.footer.navigation}</h4>
             <ul className="space-y-2 text-sm">
               <li>
                 <Link to="/team" className="text-muted-foreground hover:text-primary transition-colors">
-                  Our Team
+                  {t.nav.team}
                 </Link>
               </li>
               <li>
                 <Link to="/club" className="text-muted-foreground hover:text-primary transition-colors">
-                  About the Club
+                  {t.nav.club}
                 </Link>
               </li>
               <li>
                 <Link to="/training" className="text-muted-foreground hover:text-primary transition-colors">
-                  Training Schedule
+                  {t.nav.training}
                 </Link>
               </li>
               <li>
                 <Link to="/sponsoring" className="text-muted-foreground hover:text-primary transition-colors">
-                  Sponsors
+                  {t.nav.sponsoring}
                 </Link>
               </li>
               <li>
                 <Link to="/contact" className="text-muted-foreground hover:text-primary transition-colors">
-                  Contact Us
+                  {t.nav.contact}
                 </Link>
               </li>
               <li>
@@ -71,7 +73,21 @@ const Footer = () => {
           </div>
 
           <div>
-            <h4 className="font-display text-lg mb-4 text-primary">Contact</h4>
+            <h4 className="font-display text-lg mb-4 text-primary">{t.footer.legal}</h4>
+            <ul className="space-y-2 text-sm">
+              <li>
+                <Link to="/impressum" className="text-muted-foreground hover:text-primary transition-colors">
+                  {t.footer.impressum}
+                </Link>
+              </li>
+              <li>
+                <Link to="/datenschutz" className="text-muted-foreground hover:text-primary transition-colors">
+                  {t.footer.datenschutz}
+                </Link>
+              </li>
+            </ul>
+
+            <h4 className="font-display text-lg mb-4 mt-6 text-primary">{t.nav.contact}</h4>
             <div className="space-y-2 text-sm text-muted-foreground">
               <p>
                 <a 
@@ -83,25 +99,11 @@ const Footer = () => {
               </p>
               <p>Nürnberg, Germany</p>
             </div>
-
-            <h4 className="font-display text-lg mb-4 mt-6 text-primary">Legal</h4>
-            <ul className="space-y-2 text-sm">
-              <li>
-                <Link to="/impressum" className="text-muted-foreground hover:text-primary transition-colors">
-                  Impressum
-                </Link>
-              </li>
-              <li>
-                <Link to="/datenschutz" className="text-muted-foreground hover:text-primary transition-colors">
-                  Datenschutz
-                </Link>
-              </li>
-            </ul>
           </div>
         </div>
 
         <div className="border-t border-border mt-8 pt-8 text-center text-sm text-muted-foreground">
-          <p>&copy; {new Date().getFullYear()} Nürnberg Renegades e.V. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} Nürnberg Renegades e.V. {t.footer.rights}</p>
         </div>
       </div>
     </footer>
