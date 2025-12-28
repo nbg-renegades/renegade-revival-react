@@ -6,6 +6,7 @@ import SEOHead, { OrganizationSchema } from "@/components/SEOHead";
 import heroImage from "@/assets/hero-field.jpg";
 import actionImage from "@/assets/action-play.jpg";
 import teamHuddleImage from "@/assets/team-huddle.jpg";
+import flagFootballAction from "@/assets/flag-football-action.png";
 import { useLanguage } from "@/hooks/useLanguage";
 const Index = () => {
   const {
@@ -73,7 +74,7 @@ const Index = () => {
               </div>
             </div>
             <div className="relative">
-              <img alt="Flag Football action shot with players running plays on a green field" className="rounded-2xl shadow-card w-full object-cover aspect-video" loading="lazy" src="/lovable-uploads/3dc8d9cb-94d5-4e2b-9de9-eefe9f909694.png" />
+              <img alt="Flag Football action shot with players running plays on a green field" className="rounded-2xl shadow-card w-full object-cover aspect-video" loading="lazy" src={flagFootballAction} />
               <div className="absolute -bottom-6 -left-6 bg-primary text-primary-foreground p-4 rounded-xl shadow-lg hidden md:block">
                 <p className="font-display text-3xl">2022</p>
                 <p className="text-sm opacity-90">{language === "de" ? "Gegründet" : "Founded"}</p>
