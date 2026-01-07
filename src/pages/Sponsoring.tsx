@@ -1,8 +1,8 @@
-import { Link } from "react-router-dom";
+import Link from 'next/link';
 import { Button } from "@/components/ui/button";
 import { ExternalLink, Users, Megaphone, Network } from "lucide-react";
-import maxPharmaLogo from "@/assets/sponsors/max-pharma.svg";
-import footballshopLogo from "@/assets/sponsors/american-footballshop.png";
+const maxPharmaLogo = '/assets/sponsors/max-pharma.svg';
+const footballshopLogo = '/assets/sponsors/american-footballshop.png';
 import { useLanguage } from "@/hooks/useLanguage";
 
 interface SponsorCardProps {
@@ -112,8 +112,10 @@ const Sponsoring = () => {
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto mb-8">
             {t.sponsoring.becomeDesc}
           </p>
-          <Link to="/contact">
-            <Button size="lg">{t.sponsoring.contactUs}</Button>
+          <Link href="/contact" legacyBehavior>
+            <a>
+              <Button size="lg">{t.sponsoring.contactUs}</Button>
+            </a>
           </Link>
         </div>
       </section>

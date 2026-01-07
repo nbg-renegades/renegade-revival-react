@@ -1,5 +1,5 @@
 import teamData from "@/data/teamMembers.json";
-import playerPlaceholder from "@/assets/player-placeholder.avif";
+const playerPlaceholder = '/assets/player-placeholder.avif';
 
 interface TeamMember {
   id: string;

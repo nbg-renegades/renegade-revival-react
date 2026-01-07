@@ -1,10 +1,27 @@
-import { Link } from "react-router-dom";
-import { useState } from "react";
+"use client";
+import Link from 'next/link';
+import { useState, useEffect } from 'react';
 import { useLanguage } from "@/hooks/useLanguage";
 import { Instagram } from "lucide-react";
-import logoAvatar from "@/assets/logo-avatar.png";
+const logoAvatar = '/assets/logo-avatar.png';
 const Footer = () => {
   const [logoError, setLogoError] = useState(false);
+
+  useEffect(() => {
+    let mounted = true;
+    fetch('/logo.png', { method: 'HEAD' })
+      .then((res) => {
+        if (!mounted) return;
+        if (!res.ok) setLogoError(true);
+      })
+      .catch(() => {
+        if (!mounted) return;
+        setLogoError(true);
+      });
+    return () => {
+      mounted = false;
+    };
+  }, []);
   const { t } = useLanguage();
 
   return (
@@ -12,22 +29,29 @@ const Footer = () => {
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
-            <Link to="/" className="flex items-center gap-3 mb-4">
-              {!logoError ? (
-                <img 
-                  src="/logo.png" 
-                  alt="Nürnberg Renegades" 
+            <Link href="/" legacyBehavior>
+              <a className="flex items-center gap-3 mb-4">
+                {!logoError ? (
+                <img
+                  src="/logo.png"
+                  alt="Nürnberg Renegades"
                   className="h-10 w-auto"
-                  onError={() => setLogoError(true)}
+                  onError={(e) => {
+                    // log and fall back to avatar
+                    // eslint-disable-next-line no-console
+                    console.error('logo.png failed to load', e?.nativeEvent || e);
+                    setLogoError(true);
+                  }}
                 />
-              ) : (
-                <img 
-                  src={logoAvatar} 
-                  alt="Nürnberg Renegades" 
-                  className="h-10 w-auto"
-                />
-              )}
-              <span className="font-display text-lg tracking-wide">Nürnberg Renegades e.V.</span>
+                ) : (
+                  <img
+                    src={logoAvatar}
+                    alt="Nürnberg Renegades"
+                    className="h-10 w-auto"
+                  />
+                )}
+                <span className="font-display text-lg tracking-wide">Nürnberg Renegades e.V.</span>
+              </a>
             </Link>
             <p className="text-muted-foreground text-sm">
               {t.footer.description}
@@ -38,28 +62,28 @@ const Footer = () => {
             <h4 className="font-display text-lg mb-4 text-primary">{t.footer.navigation}</h4>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link to="/team" className="text-muted-foreground hover:text-primary transition-colors">
-                  {t.nav.team}
+                <Link href="/team" legacyBehavior>
+                  <a className="text-muted-foreground hover:text-primary transition-colors">{t.nav.team}</a>
                 </Link>
               </li>
               <li>
-                <Link to="/club" className="text-muted-foreground hover:text-primary transition-colors">
-                  {t.nav.club}
+                <Link href="/club" legacyBehavior>
+                  <a className="text-muted-foreground hover:text-primary transition-colors">{t.nav.club}</a>
                 </Link>
               </li>
               <li>
-                <Link to="/training" className="text-muted-foreground hover:text-primary transition-colors">
-                  {t.nav.training}
+                <Link href="/training" legacyBehavior>
+                  <a className="text-muted-foreground hover:text-primary transition-colors">{t.nav.training}</a>
                 </Link>
               </li>
               <li>
-                <Link to="/sponsoring" className="text-muted-foreground hover:text-primary transition-colors">
-                  {t.nav.sponsoring}
+                <Link href="/sponsoring" legacyBehavior>
+                  <a className="text-muted-foreground hover:text-primary transition-colors">{t.nav.sponsoring}</a>
                 </Link>
               </li>
               <li>
-                <Link to="/contact" className="text-muted-foreground hover:text-primary transition-colors">
-                  {t.nav.contact}
+                <Link href="/contact" legacyBehavior>
+                  <a className="text-muted-foreground hover:text-primary transition-colors">{t.nav.contact}</a>
                 </Link>
               </li>
               <li>
@@ -79,13 +103,13 @@ const Footer = () => {
             <h4 className="font-display text-lg mb-4 text-primary">{t.footer.legal}</h4>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link to="/impressum" className="text-muted-foreground hover:text-primary transition-colors">
-                  {t.footer.impressum}
+                <Link href="/impressum" legacyBehavior>
+                  <a className="text-muted-foreground hover:text-primary transition-colors">{t.footer.impressum}</a>
                 </Link>
               </li>
               <li>
-                <Link to="/datenschutz" className="text-muted-foreground hover:text-primary transition-colors">
-                  {t.footer.datenschutz}
+                <Link href="/datenschutz" legacyBehavior>
+                  <a className="text-muted-foreground hover:text-primary transition-colors">{t.footer.datenschutz}</a>
                 </Link>
               </li>
             </ul>

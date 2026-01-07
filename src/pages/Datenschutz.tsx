@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import Link from 'next/link';
 
 const Datenschutz = () => {
   return (
@@ -41,7 +41,7 @@ const Datenschutz = () => {
                 E-Mail-Adresse: <a href="mailto:it@nuernberg-renegades.de" className="text-primary hover:underline">it@nuernberg-renegades.de</a>
               </p>
               <p className="text-muted-foreground">
-                Impressum: <Link to="/impressum" className="text-primary hover:underline">nuernberg-renegades.de/impressum</Link>
+                Impressum: <Link href="/impressum" className="text-primary hover:underline">nuernberg-renegades.de/impressum</Link>
               </p>
             </section>
 

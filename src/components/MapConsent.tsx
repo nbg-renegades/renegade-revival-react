@@ -1,3 +1,4 @@
+"use client";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { MapPin, ExternalLink } from "lucide-react";
@@ -36,11 +37,17 @@ export const useMapConsent = () => {
 
 const MapConsent = ({ latitude, longitude, zoom = 16, title, address, language = "de" }: MapConsentProps) => {
   const { hasConsent, giveConsent } = useMapConsent();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const mapUrl = `https://www.openstreetmap.org/export/embed.html?bbox=${longitude - 0.005}%2C${latitude - 0.003}%2C${longitude + 0.005}%2C${latitude + 0.003}&layer=mapnik&marker=${latitude}%2C${longitude}`;
   const externalMapUrl = `https://www.openstreetmap.org/?mlat=${latitude}&mlon=${longitude}#map=${zoom}/${latitude}/${longitude}`;
 
-  if (!hasConsent) {
+  // Avoid rendering the <iframe> on the server or before client mount
+  if (!mounted || !hasConsent) {
     return (
       <div className="bg-secondary/50 rounded-lg p-6 border border-border text-center">
         <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">

@@ -1,3 +1,4 @@
+"use client";
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { translations, Language } from "@/lib/translations";
 
@@ -11,13 +12,22 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 
 export const LanguageProvider = ({ children }: { children: ReactNode }) => {
   const [language, setLanguage] = useState<Language>(() => {
-    const stored = localStorage.getItem("language");
-    return (stored as Language) || "de";
+    if (typeof window !== "undefined") {
+      const stored = localStorage.getItem("language");
+      return (stored as Language) || "de";
+    }
+    return "de";
   });
 
   useEffect(() => {
-    localStorage.setItem("language", language);
-    document.documentElement.lang = language;
+    if (typeof window !== "undefined") {
+      try {
+        localStorage.setItem("language", language);
+      } catch (e) {
+        // ignore localStorage write errors
+      }
+      document.documentElement.lang = language;
+    }
   }, [language]);
 
   const t = translations[language];

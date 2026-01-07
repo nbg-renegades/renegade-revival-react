@@ -1,12 +1,12 @@
-import { Link } from "react-router-dom";
+import Link from 'next/link';
 import { Button } from "@/components/ui/button";
 import { Users, TrendingUp, Trophy, ExternalLink, MapPin, Calendar, ChevronRight } from "lucide-react";
 import FeatureCard from "@/components/FeatureCard";
 import SEOHead, { OrganizationSchema } from "@/components/SEOHead";
-import heroImage from "@/assets/hero-field.jpg";
-import actionImage from "@/assets/action-play.jpg";
-import teamHuddleImage from "@/assets/team-huddle.jpg";
-import flagFootballAction from "@/assets/flag-football-action.png";
+const heroImage = '/assets/hero-field.jpg';
+const actionImage = '/assets/action-play.jpg';
+const teamHuddleImage = '/assets/team-huddle.jpg';
+const flagFootballAction = '/assets/flag-football-action.png';
 import { useLanguage } from "@/hooks/useLanguage";
 const Index = () => {
   const {
@@ -33,16 +33,17 @@ const Index = () => {
             {language === "de" ? "Werde Teil eines der erfolgreichsten Flag Football Teams in Bayern. Training für alle Levels - vom Anfänger bis zum Profi." : "Join one of the most successful flag football teams in Bavaria. Training for all levels - from beginner to pro."}
           </p>
           <div className="animate-fade-up-delay-2 flex flex-col sm:flex-row gap-4 justify-center">
-            <Link to="/training">
-              <Button variant="hero" size="xl">
-                {t.index.heroCta}
-              </Button>
+            <Link href="/training" legacyBehavior>
+              <a>
+                <Button variant="hero" size="xl">{t.index.heroCta}</Button>
+              </a>
             </Link>
-            <Link to="/team">
-              <Button variant="outline" size="xl">
-                {language === "de" ? "Team kennenlernen" : "Meet the Team"}
-                <ChevronRight className="w-5 h-5 ml-1" />
-              </Button>
+            <Link href="/team" legacyBehavior>
+              <a>
+                <Button variant="outline" size="xl">{language === 'de' ? 'Team kennenlernen' : 'Meet the Team'}
+                  <ChevronRight className="w-5 h-5 ml-1" />
+                </Button>
+              </a>
             </Link>
           </div>
         </div>
@@ -150,11 +151,12 @@ const Index = () => {
                   </span>
                 </li>
               </ul>
-              <Link to="/club">
-                <Button variant="default" size="lg">
-                  {language === "de" ? "Mehr über uns" : "Learn More About Us"}
-                  <ChevronRight className="w-5 h-5 ml-1" />
-                </Button>
+              <Link href="/club" legacyBehavior>
+                <a>
+                  <Button variant="default" size="lg">{language === 'de' ? 'Mehr über uns' : 'Learn More About Us'}
+                    <ChevronRight className="w-5 h-5 ml-1" />
+                  </Button>
+                </a>
               </Link>
             </div>
           </div>
@@ -221,9 +223,11 @@ const Index = () => {
                 <p className="text-muted-foreground mb-4">
                   {language === "de" ? "Unser Trainingsgelände befindet sich zentral in Nürnberg mit guter Anbindung an öffentliche Verkehrsmittel." : "Our training ground is centrally located in Nürnberg with good public transport connections."}
                 </p>
-                <Link to="/training" className="text-primary hover:underline font-medium inline-flex items-center gap-1">
-                  {language === "de" ? "Mehr erfahren" : "Learn more"}
-                  <ChevronRight className="w-4 h-4" />
+                <Link href="/training" legacyBehavior>
+                  <a className="text-primary hover:underline font-medium inline-flex items-center gap-1">
+                    {language === "de" ? "Mehr erfahren" : "Learn more"}
+                    <ChevronRight className="w-4 h-4" />
+                  </a>
                 </Link>
               </article>
             </div>
@@ -242,15 +246,15 @@ const Index = () => {
             {language === "de" ? "Melde dich für ein kostenloses Probetraining an und erlebe Flag Football hautnah!" : "Sign up for a free try-out session and experience flag football firsthand!"}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link to="/training">
-              <Button variant="hero" size="xl">
-                {t.index.heroCta}
-              </Button>
+            <Link href="/training" legacyBehavior>
+              <a>
+                <Button variant="hero" size="xl">{t.index.heroCta}</Button>
+              </a>
             </Link>
-            <Link to="/contact">
-              <Button variant="outline" size="xl">
-                {t.nav.contact}
-              </Button>
+            <Link href="/contact" legacyBehavior>
+              <a>
+                <Button variant="outline" size="xl">{t.nav.contact}</Button>
+              </a>
             </Link>
           </div>
         </div>
